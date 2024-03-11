@@ -1,0 +1,105 @@
+# Descrição: Um playbook do Ansible para a provisionamento de um novo cluster Kubernetes.
+# Comando: ansible-playbook -i inventory/hosts.ini -K --ask-vault-pass playbooks/cluster.yaml
+
+- name: "Provisionamento: configuração comum da instalação"
+  hosts: masters:workers
+  gather_facts: true
+
+  tasks:
+    - name: "Inclui o papel comum"
+      ansible.builtin.include_role:
+        name: "common"
+
+- name: "Provisionamento: instalação de um novo cluster Kubernetes"
+  hosts: masters:workers
+  gather_facts: true
+
+  tasks:
+    - name: "Inclui o papel do ContainerD"
+      ansible.builtin.include_role:
+        name: "containerd"
+
+    - name: "Inclui o papel do Kubernetes"
+      ansible.builtin.include_role:
+        name: "kubernetes"
+
+- name: "Provisionamento: configuração de um novo mestre Kubernetes"
+  hosts: masters
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+
+  tasks:
+    - name: "Inclui o papel de Master"
+      ansible.builtin.include_role:
+        name: "master"
+    - name: "Inclui o papel do kubeadm"
+      ansible.builtin.include_role:
+        name: "kubeadm"
+
+- name: "Provisionamento: configuração de um novo worker Kubernetes"
+  hosts: workers
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Inclui o papel de worker"
+      ansible.builtin.include_role:
+        name: "worker"
+
+- name: "Provisionamento: implantação do Calico em um novo cluster Kubernetes"
+  hosts: masters
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Inclui o papel do Calico"
+      ansible.builtin.include_role:
+        name: "calico"
+
+- name: "Provisionamento: implantação do cert-manager.io em um novo cluster Kubernetes"
+  hosts: masters
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Inclui o papel do cert-manager.io"
+      ansible.builtin.include_role:
+        name: "cert-manager"
+
+# - name: "Provisionamento: implantação do armazenamento NFS em um novo cluster Kubernetes"
+#   hosts: nfs-servers
+#   gather_facts: true
+#   vars_files:
+#     - "{{ playbook_dir }}/../defaults/main.yaml"
+
+#   tasks:
+#     - name: "Inclui o papel de Armazenamento NFS"
+#       ansible.builtin.include_role:
+#         name: "nfs-server"
+
+- name: "Provisionamento: implantação do MetalLB em um novo cluster Kubernetes"
+  hosts: masters
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Inclui o papel do MetalLB"
+      ansible.builtin.include_role:
+        name: "metallb"
+
+- name: "Provisionamento: implantação do controlador Ingress Nginx em um novo cluster Kubernetes"
+  hosts: masters
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Inclui o papel do Ingress Nginx"
+      ansible.builtin.include_role:
+        name: "ingress-nginx"

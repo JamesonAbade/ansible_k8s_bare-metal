@@ -1,0 +1,44 @@
+- name: "install :: #Jameson Abade# atualizando a lista de pacotes"
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    force_apt_get: true
+
+- name: "install :: #Jameson Abade# fazendo upgrades na lista de pacotes"
+  become: true
+  ansible.builtin.apt:
+    upgrade: full
+    force_apt_get: true
+
+- name: " #Jameson Abade# Instalando transport e ca-certificates"
+  become: true
+  ansible.builtin.shell: |
+    sudo apt-get install -y apt-transport-https ca-certificates curl
+
+- name: " #Jameson Abade# Baixando e renomeando a chave do Kubernetes"
+  become: true
+  ansible.builtin.shell: |
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: " #Jameson Abade# Adicionando o repositório do Kubernetes"
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
+    state: present
+    filename: kubernetes
+
+
+- name: "install :: #Jameson Abade# Atualizando a Lista de Pacotes"
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    force_apt_get: true
+
+- name: "install :: #Jameson Abade# Instalando os pacotes do kubernetes"
+  become: true
+  ansible.builtin.apt:
+    pkg:
+      - kubeadm
+      - kubelet
+      - kubectl
+    force_apt_get: true
