@@ -13,7 +13,11 @@
 - name: "config :: #Jameson Abade# Inicializando o cluster"
   become: true
   ansible.builtin.shell: |
-    kubeadm init --pod-network-cidr={{ kubernetes.CIDR }} \
+    kubeadm init --control-plane-endpoint "{{ hostvars[groups['host-keep'][0]].ansible_host }}:6443" \
+                 --upload-certs \
+                 --node-name `hostname -s` \
+                 --pod-network-cidr={{ kubernetes.CIDR }} \
+                 --apiserver-cert-extra-sans={{ kubernetes.CERTSANS }} \
                  --apiserver-advertise-address {{ ansible_default_ipv4.address }}
   register: init
 

@@ -1,6 +1,8 @@
 kubernetes:
   config: "/home/{{ ansible_user }}/.kube"
-  CIDR: "10.244.0.0/16"
+  CIDR: "172.20.0.0/16"
+  CIDR-svc: "172.19.0.0/16" 
+  CERTSANS: "10.0.8.96" #É importante colocar o host do dns
 
 calico:
   version: "v3.26.4"

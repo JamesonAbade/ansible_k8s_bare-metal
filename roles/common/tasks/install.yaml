@@ -22,4 +22,6 @@
       - apt-utils
       - nfs-common
       - ufw
+      - keepalived
+      - chrony
     force_apt_get: true

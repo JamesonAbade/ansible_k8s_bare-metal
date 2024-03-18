@@ -1,29 +1,29 @@
 # Descrição: Um playbook do Ansible para a provisionamento de um novo cluster Kubernetes.
 # Comando: ansible-playbook -i inventory/hosts.ini -K --ask-vault-pass playbooks/cluster.yaml
 
-- name: "Provisionamento: configuração comum da instalação"
-  hosts: masters:workers
+- name: "Provisionamento: configuração common da instalação"
+  hosts: masters:masters2:workers
   gather_facts: true
 
   tasks:
-    - name: "Inclui o papel comum"
+    - name: "Iniciando as roles common"
       ansible.builtin.include_role:
         name: "common"
 
 - name: "Provisionamento: instalação de um novo cluster Kubernetes"
-  hosts: masters:workers
+  hosts: masters:masters2:workers
   gather_facts: true
 
   tasks:
-    - name: "Inclui o papel do ContainerD"
+    - name: "Iniciando as roles do ContainerD"
       ansible.builtin.include_role:
         name: "containerd"
 
-    - name: "Inclui o papel do Kubernetes"
+    - name: "Iniciando as roles do Kubernetes"
       ansible.builtin.include_role:
         name: "kubernetes"
 
-- name: "Provisionamento: configuração de um novo mestre Kubernetes"
+- name: "Provisionamento: configuração do control-plane Kubernetes"
   hosts: masters
   gather_facts: true
   vars_files:
@@ -31,12 +31,23 @@
 
 
   tasks:
-    - name: "Inclui o papel de Master"
+    - name: "Iniciando as roles de Master"
       ansible.builtin.include_role:
         name: "master"
-    - name: "Inclui o papel do kubeadm"
+    - name: "Iniciando as roles do kubeadm"
       ansible.builtin.include_role:
         name: "kubeadm"
+
+- name: "Provisionamento: configuração de outro control-plane Kubernetes"
+  hosts: masters2
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/../defaults/main.yaml"
+
+  tasks:
+    - name: "Iniciando as roles de Master2"
+      ansible.builtin.include_role:
+        name: "master2"
 
 - name: "Provisionamento: configuração de um novo worker Kubernetes"
   hosts: workers
@@ -45,7 +56,7 @@
     - "{{ playbook_dir }}/../defaults/main.yaml"
 
   tasks:
-    - name: "Inclui o papel de worker"
+    - name: "Iniciando as roles de worker"
       ansible.builtin.include_role:
         name: "worker"
 
@@ -56,7 +67,7 @@
     - "{{ playbook_dir }}/../defaults/main.yaml"
 
   tasks:
-    - name: "Inclui o papel do Calico"
+    - name: "Iniciando as roles do Calico"
       ansible.builtin.include_role:
         name: "calico"
 
@@ -67,7 +78,7 @@
     - "{{ playbook_dir }}/../defaults/main.yaml"
 
   tasks:
-    - name: "Inclui o papel do cert-manager.io"
+    - name: "Iniciando as roles do cert-manager.io"
       ansible.builtin.include_role:
         name: "cert-manager"
 
@@ -78,7 +89,7 @@
 #     - "{{ playbook_dir }}/../defaults/main.yaml"
 
 #   tasks:
-#     - name: "Inclui o papel de Armazenamento NFS"
+#     - name: "Iniciando as roles de Armazenamento NFS"
 #       ansible.builtin.include_role:
 #         name: "nfs-server"
 
@@ -89,7 +100,7 @@
     - "{{ playbook_dir }}/../defaults/main.yaml"
 
   tasks:
-    - name: "Inclui o papel do MetalLB"
+    - name: "Iniciando as roles do MetalLB"
       ansible.builtin.include_role:
         name: "metallb"
 
@@ -100,6 +111,6 @@
     - "{{ playbook_dir }}/../defaults/main.yaml"
 
   tasks:
-    - name: "Inclui o papel do Ingress Nginx"
+    - name: "Iniciando as roles do Ingress Nginx"
       ansible.builtin.include_role:
         name: "ingress-nginx"
