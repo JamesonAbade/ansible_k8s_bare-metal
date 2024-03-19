@@ -1,5 +1,5 @@
 # Descrição: Um playbook do Ansible para a provisionamento de um novo cluster Kubernetes.
-# Comando: ansible-playbook -i inventory/hosts.ini -K --ask-vault-pass playbooks/cluster.yaml
+# Comando: ansible-playbook -i inventory/hosts.ini -K --ask-vault-pass --start-at-task="TASK" playbooks/cluster.yaml
 
 - name: "Provisionamento: configuração common da instalação"
   hosts: masters:masters2:workers
