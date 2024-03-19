@@ -1,10 +1,10 @@
-- name: "install :: #Jameson Abade# atualizando a lista de pacotes"
+- name: "install :: #Jameson Abade# atualizando a lista de repositórios"
   become: true
   ansible.builtin.apt:
     update_cache: true
     force_apt_get: true
 
-- name: "install :: #Jameson Abade# fazendo upgrades na lista de pacotes"
+- name: "install :: #Jameson Abade# fazendo upgrades na lista de repositórios"
   become: true
   ansible.builtin.apt:
     upgrade: full
@@ -28,7 +28,7 @@
     filename: kubernetes
 
 
-- name: "install :: #Jameson Abade# Atualizando a Lista de Pacotes"
+- name: "install :: #Jameson Abade# Atualizando a lista de repositórios"
   become: true
   ansible.builtin.apt:
     update_cache: true

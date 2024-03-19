@@ -19,7 +19,7 @@
     state: present
     filename: docker
     
-- name: "install :: #Jameson Abade# Atualizar lista de pacotes Apt"
+- name: "install :: #Jameson Abade# Atualizar lista de repositórios Apt"
   become: true
   ansible.builtin.apt:
     update_cache: yes

@@ -1,0 +1,1 @@
+kubeadm join 10.0.8.96:6443 --token l1z73a.shmlvhoobsbm9ub5 --discovery-token-ca-cert-hash sha256:8e56656fca43071b9e2d049718469c992a2570da75b036321f732836bedf29dd  --control-plane --certificate-key 087094f435fde60b18fa2d4705458fd00e43d1cfa92b6ad1f0a804ee51acd3bc
